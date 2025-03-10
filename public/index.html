@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Input Data Mahasiswa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        input,
+        button {
+            margin: 10px 0;
+            padding: 10px;
+            width: calc(100% - 20px);
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #27ae60;
+        }
+
+        .data-list {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+
+        .list-item {
+            background: #fff;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-item button {
+            background: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            margin-left: 5px;
+        }
+
+        .list-item button.edit {
+            background: #f39c12;
+        }
+
+        .search {
+            margin-bottom: 15px;
+            width: calc(100% - 20px);
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Form Mahasiswa</h2>
+        <input type="text" id="nama" placeholder="Nama" required>
+        <input type="text" id="npm" placeholder="NPM" required>
+        <input type="text" id="jurusan" placeholder="Jurusan" required>
+        <button onclick="tambahData()">Tambah Data</button>
+        <p id="error" class="error"></p>
+
+        <h3>Data Mahasiswa</h3>
+        <input type="text" id="search" class="search" placeholder="Cari mahasiswa..." onkeyup="cariMahasiswa()">
+        <div id="dataList" class="data-list"></div>
+    </div>
+
+    <script>
+        async function tambahData() {
+            const nama = document.getElementById('nama').value.trim();
+            const npm = document.getElementById('npm').value.trim();
+            const jurusan = document.getElementById('jurusan').value.trim();
+            const errorElement = document.getElementById('error');
+
+            if (!nama || !npm || !jurusan) {
+                errorElement.textContent = "Semua bidang harus diisi!";
+                return;
+            }
+
+            errorElement.textContent = "";
+
+            try {
+                await fetch('/api/mahasiswa', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nama, npm, jurusan })
+                });
+
+                document.getElementById('nama').value = '';
+                document.getElementById('npm').value = '';
+                document.getElementById('jurusan').value = '';
+                loadData();
+            } catch (error) {
+                alert("Terjadi kesalahan: " + error.message);
+            }
+        }
+
+        async function loadData() {
+            try {
+                const response = await fetch('/api/mahasiswa');
+                const data = await response.json();
+
+                const dataList = document.getElementById('dataList');
+                dataList.innerHTML = data.map(mhs => `
+                    <div class="list-item">
+                        <span>${mhs.nama} - ${mhs.npm} - ${mhs.jurusan}</span>
+                        <div>
+                            <button class="edit" onclick="editData(${mhs.id})">Edit</button>
+                            <button onclick="hapusData(${mhs.id})">Hapus</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error("Gagal mengambil data: ", error);
+            }
+        }
+
+        async function hapusData(id) {
+            if (confirm("Yakin ingin menghapus data ini?")) {
+                await fetch(`/api/mahasiswa/${id}`, { method: 'DELETE' });
+                loadData();
+            }
+        }
+
+        async function editData(id) {
+            const nama = prompt("Masukkan nama baru:");
+            const npm = prompt("Masukkan NPM baru:");
+            const jurusan = prompt("Masukkan jurusan baru:");
+
+            if (nama && npm && jurusan) {
+                await fetch(`/api/mahasiswa/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nama, npm, jurusan })
+                });
+                loadData();
+            }
+        }
+
+        async function cariMahasiswa() {
+            const query = document.getElementById('search').value.toLowerCase();
+            document.querySelectorAll('.list-item').forEach(item => {
+                item.style.display = item.innerText.toLowerCase().includes(query) ? "flex" : "none";
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", loadData);
+    </script>
+
+</body>
+
+</html>
