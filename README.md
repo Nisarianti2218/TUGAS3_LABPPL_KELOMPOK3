@@ -115,5 +115,5 @@ Proyek ini dibuat untuk keperluan pembelajaran dalam mata kuliah PPL.
 ## ✉️ Kontribusi & Pengembang
 Jika ingin berkontribusi atau melaporkan masalah, silakan buat **issue** atau **pull request** di repository ini.
 
-👩‍💻 **Dibuat oleh:** Mahardika Shiddiq Anshari & Tim
+👩‍💻 **Dibuat oleh:** Kelompok 3
 
