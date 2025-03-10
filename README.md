@@ -1,4 +1,4 @@
-# Simple API Project - Tugas PPL
+# Simple API Project - Tugas 3 PPL
 
 ## 📌 Deskripsi
 Proyek ini adalah API sederhana yang dibuat menggunakan **Express.js**. API ini dapat mengambil dan menambahkan data ke dalam sistem database berbasis JSON.
