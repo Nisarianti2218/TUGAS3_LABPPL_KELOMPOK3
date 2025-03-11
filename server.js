@@ -45,3 +45,23 @@ app.get('/api/mahasiswa/:id', (req, res) => {
     res.json(mahasiswa);
 });
 
+// Endpoint untuk menambahkan mahasiswa baru
+app.post('/api/mahasiswa', (req, res) => {
+    const { nama, npm, jurusan } = req.body;
+    if (!nama || !npm || !jurusan) {
+        return res.status(400).json({ error: 'Semua bidang harus diisi' });
+    }
+
+    const db = readDatabase();
+    const newMahasiswa = {
+        id: db.mahasiswa.length ? db.mahasiswa[db.mahasiswa.length - 1].id + 1 : 1,
+        nama,
+        npm,
+        jurusan
+    };
+
+    db.mahasiswa.push(newMahasiswa);
+    writeDatabase(db);
+
+    res.json(newMahasiswa);
+});
