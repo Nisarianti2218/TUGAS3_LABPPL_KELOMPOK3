@@ -65,3 +65,20 @@ app.post('/api/mahasiswa', (req, res) => {
 
     res.json(newMahasiswa);
 });
+
+// Endpoint untuk mengupdate data mahasiswa berdasarkan ID
+app.put('/api/mahasiswa/:id', (req, res) => {
+    const { id } = req.params;
+    const { nama, npm, jurusan } = req.body;
+    const db = readDatabase();
+    const mahasiswaIndex = db.mahasiswa.findIndex(m => m.id === parseInt(id));
+
+    if (mahasiswaIndex === -1) {
+        return res.status(404).json({ error: 'Mahasiswa tidak ditemukan' });
+    }
+
+    db.mahasiswa[mahasiswaIndex] = { id: parseInt(id), nama, npm, jurusan };
+    writeDatabase(db);
+
+    res.json({ message: 'Data berhasil diperbarui' });
+});
