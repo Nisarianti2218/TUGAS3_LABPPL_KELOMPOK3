@@ -1,7 +1,7 @@
 # TUGAS 3_KELOMPOK 3
-Shofia Nurul Huda - 2208107010015
-Nisa Rianti - 2208107010018
-Jihan Nabilah - 2208107010035
+- Shofia Nurul Huda - 2208107010015
+- Nisa Rianti - 2208107010018
+- Jihan Nabilah - 2208107010035
 
 # Sistem Manajemen Data Mahasiswa
 
