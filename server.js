@@ -90,6 +90,14 @@ app.delete('/api/mahasiswa/:id', (req, res) => {
     const initialLength = db.mahasiswa.length;
     db.mahasiswa = db.mahasiswa.filter(m => m.id !== parseInt(id));
 
+        if (db.mahasiswa.length === initialLength) {
+        return res.status(404).json({ error: 'Mahasiswa tidak ditemukan' });
+    }
+
+    writeDatabase(db);
+    res.json({ message: 'Data berhasil dihapus' });
+});
+
 // Jalankan server
 app.listen(PORT, () => {
     console.log(Server berjalan di http://localhost:${PORT});
