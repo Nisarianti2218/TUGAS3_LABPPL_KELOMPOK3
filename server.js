@@ -66,11 +66,6 @@ app.post('/api/mahasiswa', (req, res) => {
     res.json(newMahasiswa);
 });
 
-// Jalankan server
-app.listen(PORT, () => {
-    console.log(Server berjalan di http://localhost:${PORT});
-});
-
 // Endpoint untuk mengupdate data mahasiswa berdasarkan ID
 app.put('/api/mahasiswa/:id', (req, res) => {
     const { id } = req.params;
@@ -87,4 +82,10 @@ app.put('/api/mahasiswa/:id', (req, res) => {
 
     res.json({ message: 'Data berhasil diperbarui' });
 });
+
+// Jalankan server
+app.listen(PORT, () => {
+    console.log(Server berjalan di http://localhost:${PORT});
+});
+
 
