@@ -25,3 +25,23 @@ function readDatabase() {
 function writeDatabase(data) {
     fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
 }
+
+// Endpoint untuk mendapatkan semua data mahasiswa
+app.get('/api/mahasiswa', (req, res) => {
+    const db = readDatabase();
+    res.json(db.mahasiswa);
+});
+
+// Endpoint untuk mendapatkan satu mahasiswa berdasarkan ID
+app.get('/api/mahasiswa/:id', (req, res) => {
+    const { id } = req.params;
+    const db = readDatabase();
+    const mahasiswa = db.mahasiswa.find(m => m.id === parseInt(id));
+
+    if (!mahasiswa) {
+        return res.status(404).json({ error: 'Mahasiswa tidak ditemukan' });
+    }
+
+    res.json(mahasiswa);
+});
+
